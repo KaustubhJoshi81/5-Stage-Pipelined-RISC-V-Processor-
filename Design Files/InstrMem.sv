@@ -25,12 +25,12 @@ module InstrMem(
     output logic [31:0] InstrF            //Output Intruction Fetch Stage
     );
     
-    logic [31:0] Instrmem [200:0];
+    logic [31:0] Instrmem [63:0];
     
     initial begin
         $readmemh ("riscvtext.mem", Instrmem);
     end
     
     assign InstrF = Instrmem[PCF[31:2]];         //Word-Aligned
-
+    
 endmodule

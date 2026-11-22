@@ -56,7 +56,7 @@ module Execution_Stage(
     
     //Input Control Signals
     input logic        RegWriteD,
-    input logic [2:0]  ResultSrcD,
+    input logic [3:0]  ResultSrcD,          //changed from 2:0 -> 3:0
     input logic        MemWriteD,
     input logic        JumpD,
     input logic        BranchD,
@@ -88,7 +88,7 @@ module Execution_Stage(
      
     //Output Control signals to next stage register
     output logic        RegWriteE,
-    output logic [2:0]  ResultSrcE,
+    output logic [3:0]  ResultSrcE,         //changed from 2:0 -> 3:0
     output logic        MemWriteE,
     
     //Output signals sent back to Controller for calculating PCSrcE

@@ -22,7 +22,7 @@
 module Execute_Memory_Reg(
     //Control Input Signals
     input  logic        RegWriteE,
-    input  logic [2:0]  ResultSrcE,
+    input  logic [2:0]  ResultSrcE,         
     input  logic        MemWriteE,
     input  logic [2:0]  funct3E,
     

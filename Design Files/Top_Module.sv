@@ -25,15 +25,12 @@ module Top_Module(
     input  logic        reset,
     
     output logic        Z,OV,CY,N,
-    output logic [31:0] ALUResultW,
     output logic [31:0] ResultW,
-    output logic [31:0] WriteDataW,
-    output logic [31:0] ALUResultE
- 
+    output logic [31:0] WriteDataW
     );
     
     //Logic connecting Processor to Instruction & Data Memory
-    logic [31:0] PCF;
+    logic [31:2] PCF;
     logic [31:0] InstrF;
     logic [2:0]  funct3M;
     logic [31:0] ReadDataM;
@@ -44,7 +41,7 @@ module Top_Module(
     Processor cpu (clk, reset,
                    InstrF, ReadDataM,
                    PCF, funct3M, MemWriteM, ALUResultM, WriteDataM,
-                   Z,OV,CY,N, ALUResultW, ResultW, WriteDataW, ALUResultE
+                   Z,OV,CY,N, ResultW, WriteDataW
                    );
                    
     InstrMem im (PCF, InstrF);

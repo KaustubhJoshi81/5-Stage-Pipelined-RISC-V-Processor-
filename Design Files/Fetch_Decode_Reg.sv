@@ -38,15 +38,21 @@ module Fetch_Decode_Reg(
 );
 
 always_ff @(posedge clk) begin
+    
     if (FlushD) begin
         InstrD   <= 32'b0;
-        PCD      <= 32'b0;
-        PCPlus4D <= 32'b0;
+//        PCD      <= 32'b0;
+//        PCPlus4D <= 32'b0;
     end
     else if(~StallD) begin
         InstrD   <= InstrF;
+//        PCD      <= PCF;
+//        PCPlus4D <= PCPlus4F;
+    end
+    
+    if(~StallD) begin
         PCD      <= PCF;
-        PCPlus4D <= PCPlus4F;
+        PCPlus4D <= PCPlus4F;  
     end  
 end
 

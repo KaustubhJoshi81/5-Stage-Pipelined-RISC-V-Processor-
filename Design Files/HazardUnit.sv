@@ -75,31 +75,6 @@ module HazardUnit(
     
     assign lwStall = (reset) ? 0: (((ResultSrcE0) & (Rs1D == RdE | Rs2D == RdE)) ? 1:0);
     
-//    always_comb begin
-//        lwStall = (ResultSrcE0) & (Rs1D == RdE | Rs2D == RdE);
-//        if(reset) begin
-//            StallD = 1'b0;
-//            StallF = 1'b0; 
-//            FlushD = 1'b0;
-//            FlushE = 1'b0;           
-//            end
-//        else if (lwStall) begin
-//            StallD = 1'b1;
-//            StallF = 1'b1;
-//            FlushE = 1'b1;
-//            end
-//        else if (PCSrcE != 2'b00) begin
-//            FlushD = 1'b1;
-//            FlushE = 1'b1;
-//            end 
-//        else begin
-//            StallD = 1'b0;
-//            StallF = 1'b0;
-//            FlushD = 1'b0;
-//            FlushE = 1'b0;
-//        end
-//    end
-    
     assign StallD  = (reset) ? 0: (lwStall);
     assign StallF  = (reset) ? 0: (lwStall);
 

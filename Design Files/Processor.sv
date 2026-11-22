@@ -38,21 +38,21 @@ module Processor(
     
     //Final Output
     output logic        Z,OV,CY,N,      //Logic connecting Datapath & Controller
-    output logic [31:0] ALUResultW,
     output logic [31:0] ResultW,
-    output logic [31:0] WriteDataW,
-    output logic [31:0] ALUResultE
+    output logic [31:0] WriteDataW
     );
     
 //Logic connecting Datapath & Controller
-logic [31:0] InstrD;
+logic [6:0]  OpD;
+logic [2:0]  funct3D;
+logic        funct7b5D;
 
 logic        JumpE;        
 logic        BranchE;      
 logic [2:0]  funct3E;      
 
 logic        RegWriteD;  
-logic [2:0]  ResultSrcD; 
+logic [2:0]  ResultSrcD;        
 logic        MemWriteD;  
 logic        JumpD;      
 logic        BranchD;    
@@ -81,7 +81,7 @@ logic        ResultSrcE0;
 logic        RegWriteM;  
 logic        RegWriteW;  
 
-Controller con (InstrD [6:0], InstrD [14:12], InstrD [30],
+Controller con (OpD, funct3D, funct7b5D,
                 JumpE, BranchE, funct3E, Z, OV, CY, N,
                 RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUSrcD, ImmSrcD,    
                 PCSrcE
@@ -91,11 +91,11 @@ Datapath dp (RegWriteD, ResultSrcD, MemWriteD, JumpD, BranchD, ALUControlD, ALUS
              ForwardAE, ForwardBE, StallF, StallD, FlushD, FlushE,   
              InstrF, ReadDataM,
              clk, reset,
-             InstrD,
+             OpD, funct3D, funct7b5D,
              Z, CY, OV, N, JumpE, BranchE, funct3E,
              Rs1D, Rs2D, Rs1E, Rs2E, RdE, RdM, RdW, ResultSrcE0, RegWriteM, RegWriteW,  
              PCF, funct3M, MemWriteM, ALUResultM, WriteDataM, 
-             ALUResultW, ResultW, WriteDataW, ALUResultE 
+             ResultW, WriteDataW
              );
              
 HazardUnit hu (reset,
@@ -104,5 +104,4 @@ HazardUnit hu (reset,
                PCSrcE, FlushD, FlushE 
                );
 
-//`default_nettype wire
 endmodule

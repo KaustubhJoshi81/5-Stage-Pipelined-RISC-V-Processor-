@@ -36,7 +36,7 @@
 module WriteBack_Stage(
     //Control Input signals
     input  logic        RegWriteM,
-    input  logic [2:0]  ResultSrcM,
+    input  logic [3:0]  ResultSrcM,         //changed from 2:0 -> 3:0
 
     //Clock Signal
     input  logic        clk,
@@ -54,7 +54,6 @@ module WriteBack_Stage(
     output logic        RegWriteW,
     
     //Datapath Output Signal 
-    output logic [31:0] ALUResultW,
     output logic [31:0] ResultW,        //[Used by Register File]       //Also Top_MOdule Final Output
     output logic [31:0] WriteDataW,     //[Used by Register File]
     output logic [4:0]  RdW             //[Used by Register File]
@@ -62,10 +61,12 @@ module WriteBack_Stage(
     
     //Signals connecting MWReg and Mux5
     logic [2:0]  ResultSrcW;
+    logic [31:0] ALUResultW;
     logic [31:0] ReadDataW;  
     logic [31:0] PCTargetW;
     logic [31:0] ImmExtW;
     logic [31:0] PCPlus4W;
+    
     
 Memory_WriteB_Reg MWReg(RegWriteM, ResultSrcM,
                         clk,

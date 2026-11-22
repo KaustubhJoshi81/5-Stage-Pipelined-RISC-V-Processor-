@@ -22,7 +22,7 @@
 module Decode_Execute_Reg (
     //Control Input Signals
     input  logic        RegWriteD,
-    input  logic [2:0]  ResultSrcD,
+    input  logic [2:0]  ResultSrcD,     
     input  logic        MemWriteD,
     input  logic        JumpD,
     input  logic        BranchD,
@@ -66,6 +66,12 @@ module Decode_Execute_Reg (
 );
 
 always_ff @(posedge clk) begin
+    
+        RdE          <= RdD;
+        ImmExtE      <= ImmExtD;
+        PCPlus4E     <= PCPlus4D;
+        PCE          <= PCD; 
+    
     if(FlushE) begin
         RegWriteE    <= 0; 
         ResultSrcE   <= 0;
@@ -78,12 +84,12 @@ always_ff @(posedge clk) begin
         
         RD1E         <= 0;
         RD2E         <= 0;
-        PCE          <= 0;
+//        PCE          <= 0;
         Rs1E         <= 0;
         Rs2E         <= 0;
-        RdE          <= 0;
-        ImmExtE      <= 0;
-        PCPlus4E     <= 0; 
+//        RdE          <= 0;
+//        ImmExtE      <= 0;
+//        PCPlus4E     <= 0; 
     end
     else begin
         RegWriteE    <= RegWriteD; 
@@ -97,12 +103,12 @@ always_ff @(posedge clk) begin
         
         RD1E         <= RD1D;
         RD2E         <= RD2D;
-        PCE          <= PCD;
+//        PCE          <= PCD;
         Rs1E         <= Rs1D;
         Rs2E         <= Rs2D;
-        RdE          <= RdD;
-        ImmExtE      <= ImmExtD;
-        PCPlus4E     <= PCPlus4D;   
+//        RdE          <= RdD;
+//        ImmExtE      <= ImmExtD;
+//        PCPlus4E     <= PCPlus4D;   
     end
 end
 

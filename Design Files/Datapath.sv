@@ -50,7 +50,9 @@ module Datapath(
     input  logic        reset,
     
     //Output to Controller
-    output logic [31:0] InstrD,
+    output logic [6:0] OpD,
+    output logic [2:0] funct3D,
+    output logic       funct7b5D,
     
     //Output signals to Controller for caluclating PCSrcE
     output logic        Z,              //Also act as Final output
@@ -81,17 +83,15 @@ module Datapath(
     output logic [31:0] WriteDataM,
     
     //Final output signals
-    output logic [31:0] ALUResultW,
     output logic [31:0] ResultW,
-    output logic [31:0] WriteDataW,
-    output logic [31:0] ALUResultE
+    output logic [31:0] WriteDataW
     );
 
 //-----------------------------------------------------------------------------------------------------------//
 
 //logic connecting Execution_Stage to Fetch_Stage
 logic [31:0] PCTargetE;
-
+logic [31:0] ALUResultE;
 //logic connecting Fetch_Stage to Decode_Stage
 logic [31:0] PCPlus4F;
 
@@ -107,8 +107,6 @@ Fetch_Stage FS (PCSrcE,
 
 //logic connecting Decode_Stage to Execution_Stage
 //Signals already declared as output: Rs1D, Rs2D -> connecting Datapath & Hazard Unit
-logic [2:0]  funct3D;
-
 logic [31:0] RD1D;
 logic [31:0] RD2D;
 logic [31:0] PCD;
@@ -120,8 +118,7 @@ Decode_Stage DS (ImmSrcD, clk,
                  StallD, FlushD,
                  InstrF, PCF, PCPlus4F,
                  RdW, ResultW, RegWriteW,
-                 InstrD,
-                 funct3D,
+                 OpD, funct3D, funct7b5D,
                  RD1D, RD2D, PCD, Rs1D, Rs2D, RdD, ImmExtD, PCPlus4D
                  );
 
@@ -131,7 +128,8 @@ Decode_Stage DS (ImmSrcD, clk,
 //Already declared as output ports -> ALUResultM, ResultW
 
 //logic connecting Execute_Stage to Memory_Stage
-//Already declared as output port -> ALUResultE, RdE, funct3E
+//Already declared as output port -> RdE, funct3E
+
 logic        RegWriteE;
 logic [2:0]  ResultSrcE;
 logic        MemWriteE;
@@ -173,7 +171,7 @@ WriteBack_Stage WBS (RegWriteM, ResultSrcM,
                      clk,
                      ALUResultM, ReadDataM, WriteDataM, PCTargetM, RdM, PCPlus4M, ImmExtM,   
                      RegWriteW,
-                     ALUResultW, ResultW, WriteDataW, RdW        
+                     ResultW, WriteDataW, RdW        
                      );
 
 endmodule

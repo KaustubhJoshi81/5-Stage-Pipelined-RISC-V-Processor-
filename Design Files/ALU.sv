@@ -25,8 +25,8 @@
                                     
                                     4 cases:
                                     A[31]   B[31]   Result[31]  MSB Expected  
-                                    1       1       0           1           [+ve + (+ve) should result +ve]
-                                    0       0       1           0           [-ve + (-ve) should result -ve]
+                                    1       1       0           1           [-ve + (-ve) should result -ve]
+                                    0       0       1           0           [+ve + (+ve) should result +ve]
                                     
                                     0       1       1           0           [+ve - (-ve) should result +ve] 
                                     1       0       0           1           [-ve - (+ve) should result -ve] 
@@ -64,45 +64,44 @@ module ALU(
     output logic        N                      //Sign/Negative Flag
     );
     
-    logic [31:0] SrcAE_unsign;
-    logic [31:0] SrcBE_unsign;
-    
-    assign SrcAE_unsign = (SrcAE[31]) ? (~SrcAE + 1'b1):SrcAE;
-    assign SrcBE_unsign = (SrcBE[31]) ? (~SrcBE + 1'b1):SrcBE;
-    
-    logic SubFlag;                      //During Subtraction using 2's complement, 
-                                        //the final carry out is Subflag.
-                                        //Carry flag is complement of the Subflag during sub.
-    
-    always_comb begin
-        
-        case (ALUControlE)
-            4'b0000: begin
-                     {CY, ALUResultE} = SrcAE + SrcBE;                          //add
-                     OV = ((SrcAE[31] & SrcBE[31] & ~ALUResultE[31])|(~SrcAE[31] & ~SrcBE[31] & ALUResultE[31]));                                                                                     
-                     end
-            4'b0001: begin
-                     {SubFlag, ALUResultE} = SrcAE + (~SrcBE + 1'b1);           //sub
-                     CY = ~SubFlag;                                             
-                     OV = ((SrcAE[31] & ~SrcBE[31] & ~ALUResultE[31])|(~SrcAE[31] & SrcBE[31] & ~ALUResultE[31]));
-                     end
-            4'b0010: ALUResultE = SrcAE << SrcBE[4:0];                          //sll
-            4'b0011: ALUResultE = (SrcAE < SrcBE) ? 1:0;                        //slt
-            4'b0100: ALUResultE = (SrcAE_unsign < SrcBE_unsign) ? 1:0;          //sltu
-            4'b0101: ALUResultE = SrcAE ^ SrcBE;                                //xor
-            4'b0110: ALUResultE = SrcAE >> SrcBE[4:0];                          //srl
-            4'b0111: ALUResultE = SrcAE >>> SrcBE[4:0];                         //sra
-            4'b1000: ALUResultE = SrcAE | SrcBE;                                //or
-            4'b1001: ALUResultE = SrcAE & SrcBE;                                //and
-        default: begin 
-                    ALUResultE = 32'b0;
-                    CY         = 1'b0;
-                    OV         = 1'b0;
-                 end
-        endcase
-    end
-    
-    assign Z = (ALUResultE == 32'b0) ? 1:0; 
-    assign N  = ALUResultE[31];
-    
+    // One shared adder: A + B, or A + ~B + 1 (carry-in rides in the LSB)
+    logic        sub;
+    logic [31:0] bx;
+    logic [32:0] t;
+    logic [31:0] sum;
+    logic eq, lts, ltu;
+
+    assign sub = (ALUControlE == 4'b0001);
+    assign bx  = SrcBE ^ {32{sub}};
+    // 33-bit addition to preserve carry-out
+    assign t   = {SrcAE, 1'b1} + {bx, sub};
+
+    assign sum = t[32:1];
+
+  // Comparisons straight from the operands, not from the subtract result
+  assign eq  = (SrcAE == SrcBE);
+  assign lts = ($signed(SrcAE) < $signed(SrcBE));
+  assign ltu = (SrcAE < SrcBE);
+
+  always_comb begin
+    case (ALUControlE)
+      4'b0000: ALUResultE = sum;
+      4'b0001: ALUResultE = sum;
+      4'b0010: ALUResultE = SrcAE << SrcBE[4:0];
+      4'b0011: ALUResultE = {31'b0, lts};
+      4'b0100: ALUResultE = {31'b0, ltu};
+      4'b0101: ALUResultE = SrcAE ^ SrcBE;
+      4'b0110: ALUResultE = SrcAE >> SrcBE[4:0];
+      4'b0111: ALUResultE = $signed(SrcAE) >>> SrcBE[4:0];
+      4'b1000: ALUResultE = SrcAE | SrcBE;
+      4'b1001: ALUResultE = SrcAE & SrcBE;
+      default: ALUResultE = 32'b0;
+    endcase
+  end
+
+  // Old flag names kept so the controller is unchanged
+  assign Z  = eq;
+  assign N  = lts;
+  assign OV = 1'b0;
+  assign CY = ~ltu;
 endmodule

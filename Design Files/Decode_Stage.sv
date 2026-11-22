@@ -63,9 +63,9 @@ module Decode_Stage(
     input  logic        RegWriteW,          
     
     //Output to Controller
-    output logic [31:0] InstrD,
-    
+    output logic [6:0]  OpD,
     output logic [2:0]  funct3D,
+    output logic        funct7b5D,
     
     //Datapath output signals
     output logic [31:0] RD1D,
@@ -78,11 +78,7 @@ module Decode_Stage(
     output logic [31:0] PCPlus4D
     );
 
-assign funct3D = InstrD [14:12];
-
-assign Rs1D = InstrD[19:15];
-assign Rs2D = InstrD[24:20];
-assign RdD  = InstrD[11:7];
+logic [31:0] InstrD;
 
 Fetch_Decode_Reg FDReg (clk, StallD, FlushD,
                         InstrF, PCF, PCPlus4F,
@@ -91,5 +87,13 @@ Fetch_Decode_Reg FDReg (clk, StallD, FlushD,
 RegFile RegisterFile (Rs1D, Rs2D, RdW, ResultW, RegWriteW, clk, RD1D, RD2D);
 
 SignExt ExtUnit (ImmSrcD, InstrD [31:7], ImmExtD);
+
+assign OpD = InstrD [6:0];
+assign funct3D = InstrD [14:12];
+assign funct7b5D = InstrD [30];
+
+assign Rs1D = InstrD[19:15];
+assign Rs2D = InstrD[24:20];
+assign RdD  = InstrD[11:7];
      
 endmodule

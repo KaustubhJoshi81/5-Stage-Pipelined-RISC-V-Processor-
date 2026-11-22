@@ -40,8 +40,6 @@ module RegFile
     always @(negedge clk) begin
         if(WE3W & A3D!=0)
             ram[A3D] <= WD3D;        //Write back [Write back (5th) Stage]
-            
-        ram[0] <= 32'b0;
     end
     
     assign RD1D = ram[A1D];          //Reading reg1  [Decode(2nd) Stage]

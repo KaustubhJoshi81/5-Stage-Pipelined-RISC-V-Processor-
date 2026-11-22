@@ -34,7 +34,7 @@ module Controller(
     
     //Output signals to Decode Stage of Datapath
     output logic        RegWriteD,
-    output logic [2:0]  ResultSrcD,
+    output logic [2:0]  ResultSrcD,     
     output logic        MemWriteD,
     output logic        JumpD,
     output logic        BranchD,

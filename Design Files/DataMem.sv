@@ -33,7 +33,7 @@ module DataMem(
     output logic [31:0] ReadDataM           //ReadData Memory Stage
     );
     
-    logic [31:0] mem [100:0];
+    logic [31:0] mem [63:0];
     
     always_comb begin 
         case(funct3M)
