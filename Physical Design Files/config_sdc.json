@@ -1,0 +1,16 @@
+{
+  "DESIGN_NAME": "Top_Module",
+  "VERILOG_FILES": "dir::src/core.v",
+  "CLOCK_PORT": "clk",
+  "CLOCK_PERIOD": 25,
+  "FP_CORE_UTIL": 35,
+  "PL_TARGET_DENSITY_PCT": 45,
+  "SYNTH_STRATEGY": "DELAY 0",
+  "EXTRA_EXCLUDED_CELLS": [
+    "sky130_fd_sc_hd__dly*",
+    "sky130_fd_sc_hd__clkdly*"
+  ],
+  "DEFAULT_CORNER": "nom_ss_100C_1v60",
+  "PNR_SDC_FILE": "dir::sdc/pnr.sdc",
+  "SIGNOFF_SDC_FILE": "dir::sdc/signoff.sdc"
+}
