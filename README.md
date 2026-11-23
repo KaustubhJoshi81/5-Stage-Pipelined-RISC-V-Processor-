@@ -3,3 +3,4 @@ Implementing 5-stage pipeline microarchitecture of RV32I ISA on AMD Vivado. I us
 I have also completed complete RTL to GDII physical design flow using LibreLane & achieved zero violations. 
 Performance Metrics: Clock frequency: 40 MHz, Power: 13.6 mW, Area: 235.4k um2    
                      
+Note: While reproducing the work, replace the InstrMem.sv in design folder with InstrMem.sv in Physical Design folder as the previous file is not synthesizable due to initial keyword.
