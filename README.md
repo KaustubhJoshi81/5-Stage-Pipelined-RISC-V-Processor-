@@ -4,3 +4,5 @@ I have also completed complete RTL to GDII physical design flow using LibreLane 
 Performance Metrics: Clock frequency: 40 MHz, Power: 13.6 mW, Area: 235.4k um2    
                      
 Note: While reproducing the work, replace the InstrMem.sv in design folder with InstrMem.sv in Physical Design folder as the previous file is not synthesizable due to initial keyword.
+<img width="1000" height="1015" alt="Top_Module" src="https://github.com/user-attachments/assets/cb7301d5-c3dc-4155-a082-abdf2bc1b628" />
+
