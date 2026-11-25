@@ -44,18 +44,18 @@ initial begin
 reset = 1'b1; # 22; reset = 1'b0;
 end
 
-//always @(negedge clk)
-//begin
-//    if(MemWriteM) begin
-//        if(ALUResultW === 100 & WriteDataW === 25) 
-//        begin
-//        $display("Simulation succeeded");
-//        $stop; 
-//        end 
-////        else if (DataAddress !== 96) begin
-////        $display("Simulation failed"); $stop;
-////        end 
-//    end
-//end 
+always @(negedge clk)
+begin
+    if(MemWriteM) begin
+        if(ALUResultW === 100 & WriteDataW === 25) 
+        begin
+        $display("Simulation succeeded");
+        $stop; 
+        end 
+        else if (DataAddress !== 96) begin
+        $display("Simulation failed"); $stop;
+        end 
+    end
+end 
 
 endmodule
