@@ -61,27 +61,28 @@ module ALU(
     output logic        Z,                     //Zero Flag
     output logic        OV,                    //Overflow Flag 
     output logic        CY,                    //Carry flag 
-    output logic        N                      //Sign/Negative Flag
+    output logic        N,                     //Sign/Negative Flag
+    output logic        lts,
+    output logic        ltu
     );
     
     // One shared adder: A + B, or A + ~B + 1 (carry-in rides in the LSB)
     logic        sub;
     logic [31:0] bx;
-    logic [32:0] t;
+    logic [33:0] t;
     logic [31:0] sum;
-    logic eq, lts, ltu;
-
+    
     assign sub = (ALUControlE == 4'b0001);
     assign bx  = SrcBE ^ {32{sub}};
     // 33-bit addition to preserve carry-out
-    assign t   = {SrcAE, 1'b1} + {bx, sub};
+    assign t   = {1'b0, SrcAE, 1'b1} + {1'b0, bx, sub};
 
     assign sum = t[32:1];
 
   // Comparisons straight from the operands, not from the subtract result
-  assign eq  = (SrcAE == SrcBE);
-  assign lts = ($signed(SrcAE) < $signed(SrcBE));
-  assign ltu = (SrcAE < SrcBE);
+  assign Z  = (SrcAE == SrcBE) ? 1:0;
+  assign lts = ($signed(SrcAE) < $signed(SrcBE)) ? 1:0;
+  assign ltu = (SrcAE < SrcBE) ? 1:0;
 
   always_comb begin
     case (ALUControlE)
@@ -100,8 +101,15 @@ module ALU(
   end
 
   // Old flag names kept so the controller is unchanged
-  assign Z  = eq;
-  assign N  = lts;
-  assign OV = 1'b0;
-  assign CY = ~ltu;
+  assign N  = ALUResultE[31];
+  
+  logic is_add, is_sub;
+  assign is_add = (ALUControlE == 4'b0);
+  assign is_sub = (ALUControlE == 4'b1);
+  assign OV = (is_add && (SrcAE[31] == SrcBE[31]) && (sum[31] != SrcAE[31])) ||
+              (is_sub && (SrcAE[31] != SrcBE[31]) && (sum[31] != SrcAE[31]));
+  assign CY = (is_add || is_sub) && t[33];   // for SUB: 1 = no borrow
 endmodule
+
+
+
