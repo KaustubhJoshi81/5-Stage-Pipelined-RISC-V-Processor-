@@ -30,7 +30,7 @@ module Controller(
     input  logic        JumpE,
     input  logic        BranchE,
     input  logic [2:0]  funct3E,
-    input  logic        Z, OV, CY, N,
+    input  logic        Z, lts, ltu,
     
     //Output signals to Decode Stage of Datapath
     output logic        RegWriteD,
@@ -59,16 +59,22 @@ always_comb begin
     if (JumpE & OpD == 7'd103) begin
         PCSrcE = 2'b10;                     //jalr
     end
-    else begin
+    else if(JumpE & OpD == 7'd111) begin
+        PCSrcE = 2'b01;
+    end
+    else if (BranchE) begin
         case (funct3E) 
-            3'b000: PCSrcE =  (Z & BranchE)      | JumpE ? 2'b01: 2'b00;       //beq
-            3'b001: PCSrcE = ~Z & BranchE        | JumpE ? 2'b01: 2'b00;       //bne
-            3'b100: PCSrcE =  (OV ^ N) & BranchE | JumpE ? 2'b01: 2'b00;       //blt
-            3'b101: PCSrcE = ~(OV ^ N) & BranchE | JumpE ? 2'b01: 2'b00;       //bge
-            3'b110: PCSrcE = ~CY & BranchE       | JumpE ? 2'b01: 2'b00;       //bltu -> Branch if borrow
-            3'b111: PCSrcE =  CY & BranchE       | JumpE ? 2'b01: 2'b00;       //bgeu -> Branch if no borrow
+            3'b000: PCSrcE = Z      ? 2'b01: 2'b00;       //beq or jal
+            3'b001: PCSrcE = ~Z     ? 2'b01: 2'b00;       //bne or jal
+            3'b100: PCSrcE = (lts)  ? 2'b01: 2'b00;       //blt or jal
+            3'b101: PCSrcE = ~(lts) ? 2'b01: 2'b00;       //bge or jal
+            3'b110: PCSrcE = ~ltu   ? 2'b01: 2'b00;       //bltu or jal
+            3'b111: PCSrcE =  ltu   ? 2'b01: 2'b00;       //bgeu or jal
             default: PCSrcE = 2'b00;
         endcase
+    end
+    else begin
+        PCSrcE = 2'b0;
     end
 end
 
