@@ -34,20 +34,16 @@ class ALU_Driver;
     forever begin
       ALU_Transaction ALU_trans;
       ALU_gen2driv.get(ALU_trans);
+      
       @(ALU_vif.driver_cb);
       ALU_vif.driver_cb.SrcAE     		<= ALU_trans.SrcAE;
       ALU_vif.driver_cb.SrcBE     		<= ALU_trans.SrcBE;
       ALU_vif.driver_cb.ALUControlE     <= ALU_trans.ALUControlE;
       ALU_vif.driver_cb.valid		    <= 1;
+      
       @(ALU_vif.driver_cb);
-      ALU_trans.ALUResultE   			<= ALU_vif.driver_cb.ALUResultE;
-      ALU_trans.Z						<= ALU_vif.driver_cb.Z;
-      ALU_trans.OV						<= ALU_vif.driver_cb.OV;
-      ALU_trans.CY						<= ALU_vif.driver_cb.CY;
-      ALU_trans.N						<= ALU_vif.driver_cb.N;
-      ALU_trans.lts						<= ALU_vif.driver_cb.lts;
-      ALU_trans.ltu						<= ALU_vif.driver_cb.ltu;
       ALU_vif.driver_cb.valid 			<= 0;
+      
       ALU_trans.display("[ Driver ]");
       ALU_no_transactions++;
     end
