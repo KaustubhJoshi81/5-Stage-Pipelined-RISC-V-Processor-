@@ -53,15 +53,6 @@ class Con_Driver;
       Con_vif.driver_cb.valid 	   <= 1;
       
       @(Con_vif.driver_cb);
-      Con_trans.RegWriteD   		<= Con_vif.driver_cb.RegWriteD;
-      Con_trans.ResultSrcD			<= Con_vif.driver_cb.ResultSrcD;
-      Con_trans.MemWriteD			<= Con_vif.driver_cb.MemWriteD;
-      Con_trans.JumpD	    		<= Con_vif.driver_cb.JumpD;	   
-      Con_trans.BranchD				<= Con_vif.driver_cb.BranchD;		
-      Con_trans.ALUControlD			<= Con_vif.driver_cb.ALUControlD;
-      Con_trans.ALUSrcD				<= Con_vif.driver_cb.ALUSrcD;		
-      Con_trans.ImmSrcD				<= Con_vif.driver_cb.ImmSrcD;
-      Con_trans.PCSrcE				<= Con_vif.driver_cb.PCSrcE;
       Con_vif.driver_cb.valid 		<= 0;
       
       Con_trans.display("[ Driver ]");
