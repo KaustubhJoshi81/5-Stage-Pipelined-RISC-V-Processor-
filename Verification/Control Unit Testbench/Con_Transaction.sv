@@ -16,9 +16,5 @@ class Con_Transaction;
     $display("-------------------------");
     $display("- %s ",name);
     $display("-------------------------");
-    //$display("- a = %0d, b = %0d, s = %0d",SrcAE ,SrcBE, ALUControlE);
-    //$display("- y = %0d, Z = %0d, OV = %0d, CY = %0d, N = &0d, lts = %0d, ltu = %0d",
-    //         ALUResultE, Z, OV, CY, N, lts, ltu);
-    $display("-------------------------");
   endfunction
 endclass
